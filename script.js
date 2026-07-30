@@ -72,53 +72,152 @@ document.addEventListener("DOMContentLoaded", () => {
         </iframe>
     `;
 
-    const videoIframe = `
-        <iframe
-            src="https://www.youtube-nocookie.com/embed/nNS9no1pqEI"
-            title="Video YouTube"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen
-            loading="lazy">
-        </iframe>
-    `;
+    const videos = [
 
-    const videoIframeFeS = `
-    <video 
-        controls 
-        muted 
-        loop
-        loading="lazy">
-        <source src="idrocolon-feci-e-salute.mp4" type="video/mp4">
-        Il tuo browser non supporta il video HTML5.
-    </video>
-    `;
+        {
+            id:"video-1",
+            title: "Trattamento Idrocolon - Benefici",
+            type:"local",
+            src:"benefici.mov",
+            mime:"video/mp4"
+        },
+        {
+            id:"video-2",
+            title: "Trattamento Idrocolon - Macchinario",
+            type:"local",
+            src:"macchinario.mov",
+            mime:"video/mp4"
+        },
+        {
+            id:"video-3",
+            title: "Trattamento Idrocolon - Ogni Quanto?",
+            type:"local",
+            src:"ogni-quanto.mov",
+            mime:"video/mp4"
+        },
 
-    const videoIframeSisDig = `
-    <video 
-        controls 
-        muted 
-        loop
-        loading="lazy">
-        <source src="sistema-digestivo.mov" type="video/mp4">
-        Il tuo browser non supporta il video HTML5.
-    </video>
-    `;
+        {
+            id:"video-4",
+            title: "Trattamento Idrocolon - Pulizia Profonda",
+            type:"local",
+            src:"pulizia-profonda.mov",
+            mime:"video/mp4"
+        },
 
-    function loadThirdPartyContent() {
-    if (mapContainer) mapContainer.innerHTML = mapIframe;
+        {
+            id:"video-5",
+            title: "Trattamento Idrocolon - Gonfiore Addominale?",
+            type:"local",
+            src:"soffri-di-gonfiore-addominale.mov",
+            mime:"video/mp4"
+        },
+        
+        {
+            id:"video-6",
+            title: "Trattamento Idrocolon - Durata",
+            type:"local",
+            src:"durata.mov",
+            mime:"video/mp4"
+        },
+        {
+            id:"video-7",
+            title: "Trattamento Idrocolon - Strumento CleanColon",
+            type:"youtube",
+            src:"https://www.youtube-nocookie.com/embed/nNS9no1pqEI",
+            mime:"video/mp4"
+        },
+        {
+            id:"video-8",
+            title: "Trattamento Idrocolon - Feci e Salute",
+            type:"local",
+            src:"idrocolon-feci-e-salute.mp4",
+            mime:"video/mp4"
+        },
+        {
+            id:"video-9",
+            title: "Trattamento Idrocolon - Sistema Digestivo",
+            type:"local",
+            src:"sistema-digestivo.mov",
+            mime:"video/mp4"
+        }
 
-    if (videoTrattamentoColon) videoTrattamentoColon.innerHTML = videoIframe;
-    if (videoFeciESalute) videoFeciESalute.innerHTML = videoIframeFeS;
-    if (videoSistemaDigestivo) videoSistemaDigestivo.innerHTML = videoIframeSisDig;
+    ];
+
+    function showVideoPlaceholders() {
+
+        videos.forEach(video => {
+
+            const container = document.getElementById(video.id);
+
+            if (!container) return;
+
+            container.innerHTML = `
+            <div class="video-placeholder">
+                
+                <h3>${video.title}</h3>
+
+                <p>
+                    Accetta i cookie per visualizzare questo video.
+                </p>
+            </div>
+        `;
+
+        });
+
+    }
+
+    function loadThirdPartyContent(){
+
+        if(mapContainer)
+            mapContainer.innerHTML=mapIframe;
+
+        videos.forEach(video=>{
+
+            const container=document.getElementById(video.id);
+
+            if(!container) return;
+
+            if(video.type==="youtube"){
+
+                container.innerHTML=`
+                <h3 class="video-title">${video.title}</h3>
+                <iframe
+                    src="${video.src}"
+                    loading="lazy"
+                    allowfullscreen>
+                </iframe>
+            `;
+
+            }else{
+
+                container.innerHTML = `
+                <h3 class="video-title">${video.title}</h3>
+                <video controls muted loop loading="lazy" width="100%">
+                    <source src="${video.src}">
+                    Il tuo browser non supporta il video.
+                </video>
+            `;
+            }
+
+        });
+
     }
 
 
     if (localStorage.getItem("cookiesAccepted") === "true") {
+
         loadThirdPartyContent();
-        if (banner) banner.style.display = "none";
-    } else if (banner) {
-        setTimeout(() => banner.classList.add("show"), 100);
+
+        if (banner)
+            banner.style.display = "none";
+
+    } else {
+
+        showVideoPlaceholders();
+
+        if (banner)
+            setTimeout(() => banner.classList.add("show"), 100);
+
     }
 
     if (acceptBtn) {
@@ -148,4 +247,24 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     });
+
+    const showBtn=document.getElementById("showMoreVideos");
+
+    if(showBtn){
+
+        showBtn.addEventListener("click",()=>{
+
+            document
+                .querySelectorAll(".hidden-video")
+                .forEach(video=>{
+
+                    video.style.display="block";
+
+                });
+
+            showBtn.style.display="none";
+
+        });
+
+    }
 });
